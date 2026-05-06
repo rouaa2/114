@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台股好好玩 - 期末專題</title>
+    <!-- 引入圓潤的 Google 字體，符合吉卜力溫暖可愛的風格 -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基礎重置與變數設定 */
+        :root {
+            --sky-top: #1a2a3a;
+            --sky-bottom: #3a5f48;
+            --hill-light: #4c7353;
+            --hill-mid: #2c4c3b;
+            --hill-dark: #1b3325;
+            --text-main: #fdfdfd;
+            --text-accent: #e9c46a;
+            --card-bg: rgba(255, 255, 255, 0.12);
+            --btn-bg: #d4a373;
+            --btn-hover: #e5b687;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', 'Microsoft JhengHei', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 背景：吉卜力風格的綿延山丘 */
+        .hills-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40vh;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .hill {
+            position: absolute;
+            border-radius: 50%;
+            transition: all 0.5s ease;
+        }
+
+        .hill-1 {
+            width: 150vw;
+            height: 150vw;
+            bottom: -120vw;
+            left: -20vw;
+            background: var(--hill-light);
+            box-shadow: inset 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .hill-2 {
+            width: 120vw;
+            height: 120vw;
+            bottom: -90vw;
+            right: -10vw;
+            background: var(--hill-mid);
+            box-shadow: inset 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .hill-3 {
+            width: 100vw;
+            height: 100vw;
+            bottom: -70vw;
+            left: 10vw;
+            background: var(--hill-dark);
+        }
+
+        /* 背景：螢火蟲動畫畫布 */
+        #magic-dust {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 內容區塊 */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* 標題區 */
+        header {
+            text-align: center;
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: var(--text-accent);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 毛玻璃卡片（介紹區） */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1.5s ease-out 0.3s backwards;
+            line-height: 1.8;
+        }
+
+        .glass-card h2 {
+            font-size: 2rem;
+            color: var(--text-accent);
+            margin-bottom: 20px;
+            border-bottom: 2px dashed rgba(233, 196, 106, 0.4);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .glass-card p {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .tag-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(233, 196, 106, 0.2);
+            color: var(--text-accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(233, 196, 106, 0.4);
+        }
+
+        /* 執行檔下載按鈕區 */
+        .action-section {
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeInUp 1.5s ease-out 0.6s backwards;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--btn-bg);
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 18px 40px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(212, 163, 115, 0.4), inset 0 2px 5px rgba(255,255,255,0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--btn-hover);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(212, 163, 115, 0.6), inset 0 2px 5px rgba(255,255,255,0.4);
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 5px 15px rgba(212, 163, 115, 0.4);
+        }
+
+        .btn-icon {
+            font-size: 1.5rem;
+        }
+
+        /* 動畫設定 */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            .glass-card { padding: 25px; }
+            .glass-card h2 { font-size: 1.6rem; }
+            .download-btn { font-size: 1.1rem; padding: 15px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景山丘 -->
+    <div class="hills-container">
+        <div class="hill hill-1"></div>
+        <div class="hill hill-2"></div>
+        <div class="hill hill-3"></div>
+    </div>
+
+    <!-- 動畫背景畫布 -->
+    <canvas id="magic-dust"></canvas>
+
+    <!-- 主要內容區 -->
+    <div class="container">
+        <header>
+            <h1>✦ 台股好好玩 ✦</h1>
+            <p>114學年度 高二深廣課程期末專題</p>
+        </header>
+
+        <main>
+            <section class="glass-card">
+                <h2>專題主題介紹</h2>
+                <p>
+                    在這片充滿未知與機遇的「金融森林」中，隱藏著影響經濟脈動的各種細節。本專題旨在探討台灣股市的歷史走勢與產業動態，我們將生硬的金融數據具象化，透過程式設計與數據可視化，讓使用者能夠以輕鬆、互動的方式了解台股市場的運作機制與投資基礎。
+                </p>
+                <p>
+                    專案結合了 <strong>Python 數據分析與爬蟲</strong> 以及 <strong>網頁互動技術</strong>，打造出一個既具教育意義又充滿吉卜力奇幻風格的台股模擬觀測站。在模擬器中，您可以扮演市場的觀察者，探索不同產業在國際情勢變換下的動態影響。
+                </p>
+                
+                <div class="tag-container">
+                    <span class="tag">金融科技</span>
+                    <span class="tag">Python 爬蟲</span>
+                    <span class="tag">數據視覺化</span>
+                    <span class="tag">投資理財</span>
+                </div>
+            </section>
+
+            <div class="action-section">
+                <!-- 執行檔按鈕 -->
+                <button class="download-btn" onclick="downloadGame()">
+                    <span class="btn-icon">🍃</span>
+                    下載專案執行檔 (.exe)
+                </button>
+                <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.7;">檔案大小：約 45 MB | 支援 Windows 10/11</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript：處理螢火蟲特效與按鈕功能 -->
+    <script>
+        // --- 點擊下載按鈕的功能 ---
+        function downloadGame() {
+            // 在實際環境中，這裡可以替換為真實的檔案下載連結
+            // 例如： window.location.href = './files/ForestSpirits_Project.exe';
+            
+            // 這裡使用動態提示作為展示
+            const btn = document.querySelector('.download-btn');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<span class="btn-icon">✨</span> 魔法下載中...';
+            btn.style.pointerEvents = 'none'; // 防止重複點擊
+            
+            setTimeout(() => {
+                alert('感謝您的下載！(這是一個專題網頁展示，實際檔案需替換連結)');
+                btn.innerHTML = originalText;
+                btn.style.pointerEvents = 'auto';
+            }, 1500);
+        }
+
+        // --- 畫布螢火蟲/魔法光點動畫系統 ---
+        const canvas = document.getElementById('magic-dust');
+        const ctx = canvas.getContext('2d');
+
+        let particlesArray = [];
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+
+        // 設定畫布尺寸
+        function resizeCanvas() {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // 粒子（螢火蟲）類別
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvasWidth;
+                this.y = Math.random() * canvasHeight;
+                this.size = Math.random() * 3 + 1; // 粒子大小
+                this.speedX = Math.random() * 1 - 0.5; // 水平移動速度
+                this.speedY = Math.random() * -1 - 0.2; // 垂直移動速度 (向上飄)
+                this.color = '#e9c46a'; // 溫暖的光點顏色
+                this.alpha = Math.random() * 0.8 + 0.1;
+                this.alphaChange = Math.random() * 0.02 - 0.01; // 閃爍效果
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // 閃爍邏輯
+                this.alpha += this.alphaChange;
+                if (this.alpha <= 0.1 || this.alpha >= 0.9) {
+                    this.alphaChange = -this.alphaChange;
+                }
+
+                // 當粒子飄出上方，從下方重新產生
+                if (this.y < 0 - this.size) {
+                    this.y = canvasHeight + this.size;
+                    this.x = Math.random() * canvasWidth;
+                }
+                
+                // 水平邊界環繞
+                if (this.x < 0) this.x = canvasWidth;
+                if (this.x > canvasWidth) this.x = 0;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                
+                // 添加發光效果
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = this.color;
+                
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // 初始化粒子群
+        function initParticles() {
+            particlesArray = [];
+            // 根據螢幕寬度決定螢火蟲數量
+            let numberOfParticles = Math.floor(canvasWidth / 15); 
+            // 限制數量避免效能問題
+            if (numberOfParticles > 100) numberOfParticles = 100;
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // 動畫循環
+        function animate() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // 啟動動畫
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
+
